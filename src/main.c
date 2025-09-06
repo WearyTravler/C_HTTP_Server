@@ -55,7 +55,7 @@ int main() {
 
 	int id = accept(server_fd, (struct sockaddr *)&client_addr, &client_addr_len);
 	printf("Client connected\n");
-	send(id, "HTTP/1.1 200 OK \r\n\r\n",19,0);
+	send(id, "HTTP/1.1 200 OK\r\n\r\n",19,0);
 	
 	accept(server_fd, (struct sockaddr *) &client_addr, &client_addr_len);
 	printf("Client connected\n");

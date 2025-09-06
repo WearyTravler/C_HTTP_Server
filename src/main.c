@@ -17,8 +17,9 @@ int main() {
 
 	// Uncomment this block to pass the first stage
 	//
-	int server_fd, client_addr_len;
+	int server_fd;
 	struct sockaddr_in client_addr;
+	socklen_t client_addr_len = sizeof(client_addr);
 	
 	server_fd = socket(AF_INET, SOCK_STREAM, 0);
 	if (server_fd == -1) {
@@ -50,17 +51,22 @@ int main() {
 		return 1;
 	}
 	
-	printf("Waiting for a client to connect...\n");
-	client_addr_len = sizeof(client_addr);
+	for (;;) {
+		int client_fd = accept(server_fd, (struct sockaddr *)&client_addr, &client_addr_len);
+		if (client_fd < 0) { perror("accept"); continue; }
+		printf("Client connected\n");
 
-	int id = accept(server_fd, (struct sockaddr *)&client_addr, &client_addr_len);
-	printf("Client connected\n");
-	send(id, "HTTP/1.1 200 OK\r\n\r\n",19,0);
-	
-	accept(server_fd, (struct sockaddr *) &client_addr, &client_addr_len);
-	printf("Client connected\n");
-	
-	close(server_fd);
+		// step 3
+		char buf[8192];
+		ssize_t n = recv(client_fd, buf, sizeof(buf) - 1,0);
+		buf[n] = '\0'; 
+		// step 4
+		// step 5
+
+
+
+		close(client_fd);
+	}
 
 	return 0;
 }
